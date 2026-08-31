@@ -157,7 +157,7 @@ export default function PictureSequencePage({ params }: { params: Promise<{ id: 
         <p className="mt-10 text-2xl font-semibold text-amber-600">Try Again</p>
       )}
 
-      {feedback !== 'correct' && (
+      {(feedback === null || feedback === 'incorrect') && (
         <button onClick={handleCheck}
           className="mt-10 rounded-2xl bg-blue-600 px-14 py-5 text-3xl font-bold text-white shadow-md hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 active:scale-95 transition-transform">
           Check ✓

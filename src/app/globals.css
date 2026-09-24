@@ -4,6 +4,82 @@
   --font-sans: var(--font-geist-sans);
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 font-sans;
+/* Dark mode: toggled via data-theme="dark" on <html>.
+   These unlayered rules override Tailwind's layered utilities. */
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
+
+html[data-theme="dark"] body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+/* Surfaces */
+html[data-theme="dark"] .bg-white { background-color: #1e293b; }
+html[data-theme="dark"] .bg-slate-50 { background-color: #0f172a; }
+html[data-theme="dark"] .bg-slate-100 { background-color: #334155; }
+html[data-theme="dark"] .bg-blue-50 { background-color: #1e3a5f; }
+html[data-theme="dark"] .bg-gray-200 { background-color: #0f172a; }
+html[data-theme="dark"] .bg-slate-700 { background-color: #020617; }
+html[data-theme="dark"] .bg-slate-900\/50 { background-color: rgba(2, 6, 23, 0.85); }
+
+/* Semantic backgrounds */
+html[data-theme="dark"] .bg-green-50 { background-color: #052e16; }
+html[data-theme="dark"] .bg-green-100 { background-color: #14532d; }
+html[data-theme="dark"] .bg-amber-50 { background-color: #451a03; }
+html[data-theme="dark"] .bg-red-50 { background-color: #450a0a; }
+html[data-theme="dark"] .bg-red-600 { background-color: #b91c1c; }
+html[data-theme="dark"] .bg-blue-600 { background-color: #1d4ed8; }
+html[data-theme="dark"] .bg-green-600 { background-color: #15803d; }
+
+/* Text */
+html[data-theme="dark"] .text-slate-900 { color: #f1f5f9; }
+html[data-theme="dark"] .text-slate-800 { color: #e2e8f0; }
+html[data-theme="dark"] .text-slate-700 { color: #cbd5e1; }
+html[data-theme="dark"] .text-slate-600 { color: #94a3b8; }
+html[data-theme="dark"] .text-slate-500 { color: #94a3b8; }
+html[data-theme="dark"] .text-slate-400 { color: #64748b; }
+html[data-theme="dark"] .placeholder\:text-slate-400::placeholder { color: #64748b; }
+
+/* Borders */
+html[data-theme="dark"] .border-slate-100 { border-color: #1e293b; }
+html[data-theme="dark"] .border-slate-200 { border-color: #334155; }
+html[data-theme="dark"] .border-slate-300 { border-color: #475569; }
+html[data-theme="dark"] .border-b-slate-200 { border-bottom-color: #334155; }
+html[data-theme="dark"] .border-green-200 { border-color: #166534; }
+html[data-theme="dark"] .border-amber-200 { border-color: #92400e; }
+html[data-theme="dark"] .border-red-200 { border-color: #991b1b; }
+html[data-theme="dark"] .border-blue-200 { border-color: #1e40af; }
+
+/* Ring / focus visibility */
+html[data-theme="dark"] .ring-slate-300 { --tw-ring-color: #475569; }
+html[data-theme="dark"] .ring-slate-400 { --tw-ring-color: #64748b; }
+html[data-theme="dark"] .ring-blue-300 { --tw-ring-color: #3b82f6; }
+
+/* Hover states */
+html[data-theme="dark"] .hover\:bg-slate-50:hover { background-color: #1e293b; }
+html[data-theme="dark"] .hover\:bg-slate-100:hover { background-color: #475569; }
+html[data-theme="dark"] .hover\:bg-blue-50:hover { background-color: #1e40af; }
+html[data-theme="dark"] .hover\:bg-white:hover { background-color: #334155; }
+html[data-theme="dark"] .hover\:bg-red-50:hover { background-color: #7f1d1d; }
+html[data-theme="dark"] .hover\:bg-green-100:hover { background-color: #166534; }
+html[data-theme="dark"] .hover\:bg-blue-100:hover { background-color: #1e40af; }
+html[data-theme="dark"] .hover\:border-slate-300:hover { border-color: #475569; }
+html[data-theme="dark"] .hover\:border-blue-400:hover { border-color: #60a5fa; }
+html[data-theme="dark"] .hover\:border-slate-400:hover { border-color: #64748b; }
+
+/* Dividers */
+html[data-theme="dark"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1e293b; }
+html[data-theme="dark"] .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: #334155; }
+
+/* Table header / row hovers */
+html[data-theme="dark"] .bg-slate-50.border-b { background-color: #0f172a; border-bottom-color: #334155; }
+html[data-theme="dark"] tr.hover\:bg-slate-50:hover { background-color: #334155; }
+
+/* Chart tooltip / grid readability */
+html[data-theme="dark"] .recharts-cartesian-grid-horizontal line,
+html[data-theme="dark"] .recharts-cartesian-grid-vertical line { stroke: #1e293b; }
+
+/* Maintain disabled-state visibility */
+html[data-theme="dark"] .disabled\:opacity-50:disabled { opacity: 0.55; }

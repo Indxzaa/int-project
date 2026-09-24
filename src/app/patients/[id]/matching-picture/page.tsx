@@ -4,6 +4,7 @@ import { use, useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useLiveQuery } from 'dexie-react-hooks'
 import db from '@/lib/db'
+import { useI18n } from '@/lib/i18n'
 import { Photo } from '@/lib/types'
 import { BlobImg } from '@/components/session/BlobImg'
 import { RewardOverlay } from '@/components/ui/RewardOverlay'
@@ -33,6 +34,7 @@ export default function MatchingPicturePage({ params }: { params: Promise<{ id: 
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useI18n()
   const from = searchParams.get('from') ?? 'patient'
   const exitPath =
     from === 'patient' || from === 'role'
@@ -116,16 +118,16 @@ export default function MatchingPicturePage({ params }: { params: Promise<{ id: 
     <div className="flex min-h-screen flex-col items-center bg-white px-6 pb-16 pt-10">
       <button
         onClick={() => router.push(exitPath)}
-        aria-label="Back"
-        className="absolute left-6 top-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-3xl text-slate-700 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400"
+        aria-label={t('back')}
+        className="absolute left-4 top-5 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-700 hover:bg-slate-200 active:scale-95 transition-all duration-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400"
       >
         ←
       </button>
 
-      <h1 className="mb-10 text-4xl font-bold text-slate-900">Matching Picture</h1>
+      <h1 className="mb-10 text-4xl font-bold text-slate-900">{t('matching_picture')}</h1>
 
       {photos !== undefined && photos.length < 2 && (
-        <p className="text-xl text-slate-500">Please upload at least 2 photos to play.</p>
+        <p className="text-xl text-slate-500">{t('min_2_photos')}</p>
       )}
 
       {cards.length > 0 && (

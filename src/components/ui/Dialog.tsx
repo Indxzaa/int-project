@@ -30,7 +30,7 @@ export function Dialog({ open, onClose, title, children }: DialogProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'dialog-title' : undefined}
-        className="relative z-10 w-full max-w-md rounded-md bg-white p-6 shadow-lg"
+        className="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
       >
         {title && (
           <h2 id="dialog-title" className="mb-4 text-lg font-semibold text-slate-900">

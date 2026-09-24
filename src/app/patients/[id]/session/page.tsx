@@ -1,9 +1,10 @@
 'use client'
 
-import { use, useState, useEffect, useCallback, useRef } from 'react'
+import { use, useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useLiveQuery } from 'dexie-react-hooks'
 import db from '@/lib/db'
+import { useI18n } from '@/lib/i18n'
 import { createSession, addPhotoToSession, closeSession } from '@/lib/db/queries'
 import { Button } from '@/components/ui/Button'
 import { BlobImg } from '@/components/session/BlobImg'
@@ -16,6 +17,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useI18n()
   const from = searchParams.get('from')
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [index, setIndex] = useState(0)
@@ -69,7 +71,8 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
     const base = sessionId
       ? `/patients/${id}/session/summary?sessionId=${sessionId}`
       : `/patients/${id}`
-    router.push(from === 'patient' ? `${base}&from=patient` : base)
+    const suffix = from === 'patient' || from === 'role' ? `&from=${from}` : ''
+    router.push(`${base}${suffix}`)
   }, [sessionId, id, router, from])
 
   if (!photos) return null
@@ -78,9 +81,9 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
     return (
       <div className="flex flex-col items-center gap-6 p-8 pt-20 text-center">
         <span className="text-5xl">🖼️</span>
-        <p className="text-lg font-medium text-slate-700">No photos uploaded yet.</p>
-        <p className="text-slate-500">Add photos to this patient&apos;s profile before starting a session.</p>
-        <Button variant="secondary" onClick={() => router.back()}>Go Back</Button>
+        <p className="text-lg font-medium text-slate-700">{t('no_photos_yet')}</p>
+        <p className="text-slate-500">{t('add_photos_before_session')}</p>
+        <Button variant="secondary" onClick={() => router.back()}>{t('go_back')}</Button>
       </div>
     )
   }
@@ -90,8 +93,8 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
 
       <button
         onClick={handleExit}
-        aria-label="Exit session"
-        className="absolute right-5 top-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-700 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+        aria-label={t('exit_session')}
+        className="absolute right-4 top-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-700 hover:bg-slate-200 active:scale-95 transition-all duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
       >
         ✕
       </button>
@@ -99,7 +102,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
       {phase === 'dot' && (
         <button
           onClick={handleDotTap}
-          aria-label="Tap the red dot"
+          aria-label={t('tap_red_dot')}
           style={{ left: `${dotPos.x}%`, top: `${dotPos.y}%`, transform: 'translate(-50%, -50%)' }}
           className="absolute z-30 h-28 w-28 rounded-full bg-red-500 shadow-[0_0_40px_rgba(239,68,68,0.6)] hover:bg-red-400 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-300"
         />
@@ -116,7 +119,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
           onClick={handleNext}
           className="absolute bottom-8 right-8 z-50 flex h-16 items-center gap-3 rounded-full bg-white px-8 text-lg font-semibold text-slate-900 shadow-lg hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
         >
-          {index >= photos.length - 1 ? 'Finish ✓' : 'Next →'}
+          {index >= photos.length - 1 ? `${t('finish')} ✓` : `${t('next')} →`}
         </button>
       )}
 

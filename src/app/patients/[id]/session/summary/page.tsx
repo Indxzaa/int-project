@@ -1,7 +1,8 @@
 'use client'
 
-import { use, useEffect, useState } from 'react'
+import { use, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useI18n } from '@/lib/i18n'
 import { getSession } from '@/lib/db/queries'
 import { Session } from '@/lib/types'
 import { Header } from '@/components/ui/Header'
@@ -21,6 +22,7 @@ export default function SummaryPage({ params }: { params: Promise<{ id: string }
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useI18n()
   const sessionId = searchParams.get('sessionId')
   const from = searchParams.get('from')
   const backPath = from === 'patient' || from === 'role'
@@ -36,35 +38,35 @@ export default function SummaryPage({ params }: { params: Promise<{ id: string }
 
   return (
     <>
-      <Header title="Session Summary" onBack={() => router.push(backPath)} />
+      <Header title={t('session_summary')} onBack={() => router.push(backPath)} />
       <Layout className="flex flex-col gap-8">
         <div className="flex flex-col items-center gap-3 pt-6 text-center">
           <span className="text-6xl">🧠</span>
-          <h2 className="text-2xl font-bold text-slate-900">Session Complete</h2>
-          <p className="text-slate-500">Great work! Here&apos;s how the session went.</p>
+          <h2 className="text-2xl font-bold text-slate-900">{t('session_complete')}</h2>
+          <p className="text-slate-500">{t('great_work')}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <Card className="flex flex-col items-center gap-1 p-5">
             <span className="text-3xl font-bold text-blue-600">{session.photosViewed.length}</span>
-            <span className="text-sm text-slate-500">Photos Shown</span>
+            <span className="text-sm text-slate-500">{t('photos_shown')}</span>
           </Card>
           <Card className="flex flex-col items-center gap-1 p-5">
             <span className="text-3xl font-bold text-purple-600">{formatDuration(session.startedAt, session.endedAt)}</span>
-            <span className="text-sm text-slate-500">Duration</span>
+            <span className="text-sm text-slate-500">{t('duration')}</span>
           </Card>
         </div>
 
         <div className="flex flex-col gap-3 pt-2">
           <Button size="lg" className="w-full" onClick={() => router.push(`/patients/${id}/session${from === 'patient' || from === 'role' ? `?from=${from}` : ''}`)}>
-            ▶ Start Another Session
+            {t('start_another')}
           </Button>
           <Button variant="secondary" size="lg" className="w-full" onClick={() => router.push(backPath)}>
-            {(from === 'patient' || from === 'role') ? 'Back to Games' : 'Back to Profile'}
+            {(from === 'patient' || from === 'role') ? t('back_to_games') : t('back_to_profile_btn')}
           </Button>
           {from !== 'patient' && from !== 'role' && (
             <Button variant="ghost" size="lg" className="w-full" onClick={() => router.push('/caregiver')}>
-              Home
+              {t('home')}
             </Button>
           )}
         </div>

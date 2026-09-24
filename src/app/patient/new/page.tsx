@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLiveQuery } from 'dexie-react-hooks'
 import db from '@/lib/db'
+import { useI18n } from '@/lib/i18n'
 import { createPatient, addPhoto } from '@/lib/db/queries'
 import { DementiaLevel } from '@/lib/types'
 import { Header } from '@/components/ui/Header'
@@ -11,11 +12,12 @@ import { Layout } from '@/components/ui/Layout'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
-const fieldClass = 'rounded-md border border-slate-300 px-3 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1'
-const labelClass = 'text-sm font-medium text-slate-700'
+const fieldClass = 'rounded-xl border border-slate-300 px-4 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1'
+const labelClass = 'text-base font-medium text-slate-700'
 
 export default function PatientNewPage() {
   const router = useRouter()
+  const { t } = useI18n()
   const patientCount = useLiveQuery(() => db.patients.count(), [])
   const photoInputRef = useRef<HTMLInputElement>(null)
   const [saving, setSaving] = useState(false)
@@ -48,9 +50,9 @@ export default function PatientNewPage() {
       dementiaLevel: form.dementiaLevel as DementiaLevel,
       age: Number(form.age),
       gender: form.gender,
-      phone: form.phone.trim() || 'Not provided',
-      countryOfBirth: form.countryOfBirth || 'Not provided',
-      address: form.address.trim() || 'Not provided',
+      phone: form.phone.trim() || t('not_provided'),
+      countryOfBirth: form.countryOfBirth || t('not_provided'),
+      address: form.address.trim() || t('not_provided'),
       birthday: form.birthday || undefined,
       height: form.height ? Number(form.height) : undefined,
       weight: form.weight ? Number(form.weight) : undefined,
@@ -64,49 +66,49 @@ export default function PatientNewPage() {
 
   return (
     <>
-      <Header title="Create Patient Account" onBack={() => router.push('/patient')} />
+      <Header title={t('create_patient_account_title')} onBack={() => router.push('/patient')} />
       <Layout>
         {patientCount !== undefined && patientCount >= 3 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center gap-6">
             <span className="text-6xl">🚫</span>
-            <p className="text-2xl font-semibold text-slate-800">Account limit reached</p>
+            <p className="text-2xl font-semibold text-slate-800">{t('account_limit_reached')}</p>
             <p className="max-w-sm text-lg text-slate-500">
-              Maximum of 3 patient accounts allowed on this device.
+              {t('max_3_patients')}
             </p>
             <Button variant="secondary" size="lg" onClick={() => router.push('/patient')}>
-              Go Back
+              {t('go_back')}
             </Button>
           </div>
         ) : (
         <form className="flex max-w-2xl flex-col gap-6" onSubmit={handleSubmit}>
 
-          <Input id="name" label="Full Name *" value={form.name} onChange={set('name')} placeholder="Your full name" required />
+          <Input id="name" label={`${t('full_name')} *`} value={form.name} onChange={set('name')} placeholder={t('placeholder_name')} required />
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="dementiaLevel" className={labelClass}>Dementia Level *</label>
-            <select id="dementiaLevel" value={form.dementiaLevel} onChange={set('dementiaLevel')} className={`h-11 ${fieldClass}`} required>
-              <option value="">Select level…</option>
-              <option value="mild">Mild</option>
-              <option value="moderate">Moderate</option>
-              <option value="severe">Severe</option>
+            <label htmlFor="dementiaLevel" className={labelClass}>{t('dementia_level')} *</label>
+            <select id="dementiaLevel" value={form.dementiaLevel} onChange={set('dementiaLevel')} className={`h-12 ${fieldClass}`} required>
+              <option value="">{t('select_level')}</option>
+              <option value="mild">{t('mild')}</option>
+              <option value="moderate">{t('moderate')}</option>
+              <option value="severe">{t('severe')}</option>
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Input id="age" label="Age *" type="number" min={0} max={130} value={form.age} onChange={set('age')} placeholder="e.g. 72" required />
+            <Input id="age" label={`${t('age')} *`} type="number" min={0} max={130} value={form.age} onChange={set('age')} placeholder="e.g. 72" required />
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="gender" className={labelClass}>Gender *</label>
-              <select id="gender" value={form.gender} onChange={set('gender')} className={`h-11 ${fieldClass}`} required>
-                <option value="">Select…</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+              <label htmlFor="gender" className={labelClass}>{t('gender')} *</label>
+              <select id="gender" value={form.gender} onChange={set('gender')} className={`h-12 ${fieldClass}`} required>
+                <option value="">{t('select_gender')}</option>
+                <option value="male">{t('male')}</option>
+                <option value="female">{t('female')}</option>
+                <option value="other">{t('other')}</option>
               </select>
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className={labelClass}>Patient Photo (Optional)</label>
+            <label className={labelClass}>{t('patient_photo_optional')}</label>
             <input
               ref={photoInputRef}
               type="file"
@@ -116,44 +118,43 @@ export default function PatientNewPage() {
             />
             {photoPreview ? (
               <div className="flex items-center gap-4">
-                <img src={photoPreview} alt="Preview" className="h-24 w-24 rounded-md object-cover border-2 border-slate-200" />
+                <img src={photoPreview} alt={t('new_photo_preview')} className="h-24 w-24 rounded-md object-cover border-2 border-slate-200" />
                 <Button type="button" variant="secondary" size="sm" onClick={() => photoInputRef.current?.click()}>
-                  Change Photo
+                  {t('change')}
                 </Button>
               </div>
             ) : (
               <Button type="button" variant="secondary" onClick={() => photoInputRef.current?.click()}>
-                📷 Upload Photo
+                {t('upload_photo')}
               </Button>
             )}
           </div>
 
-          <Input id="phone" label="Phone Number" type="tel" value={form.phone} onChange={set('phone')} placeholder="e.g. +1 555 000 0000" />
-
-          <Input id="countryOfBirth" label="Country of Birth" value={form.countryOfBirth} onChange={set('countryOfBirth')} placeholder="e.g. United States" />
+          <Input id="phone" label={t('phone_number')} type="tel" value={form.phone} onChange={set('phone')} placeholder={t('placeholder_phone')} />
+          <Input id="countryOfBirth" label={t('country_of_birth')} value={form.countryOfBirth} onChange={set('countryOfBirth')} placeholder={t('placeholder_country')} />
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="address" className={labelClass}>Address</label>
-            <textarea id="address" rows={3} value={form.address} onChange={set('address')} placeholder="Full residential address…" className={`resize-none py-2.5 ${fieldClass}`} />
+            <label htmlFor="address" className={labelClass}>{t('address_label')}</label>
+            <textarea id="address" rows={3} value={form.address} onChange={set('address')} placeholder={t('placeholder_address')} className={`resize-none py-2.5 ${fieldClass}`} />
           </div>
 
-          <Input id="birthday" label="Date of Birth" type="date" value={form.birthday} onChange={set('birthday')} />
+          <Input id="birthday" label={t('date_of_birth')} type="date" value={form.birthday} onChange={set('birthday')} />
 
           <div className="grid grid-cols-2 gap-4">
-            <Input id="height" label="Height (cm)" type="number" min={0} value={form.height} onChange={set('height')} placeholder="e.g. 165" />
-            <Input id="weight" label="Weight (kg)" type="number" min={0} value={form.weight} onChange={set('weight')} placeholder="e.g. 70" />
+            <Input id="height" label={t('height_cm')} type="number" min={0} value={form.height} onChange={set('height')} placeholder={t('placeholder_height')} />
+            <Input id="weight" label={t('weight_kg')} type="number" min={0} value={form.weight} onChange={set('weight')} placeholder={t('placeholder_weight')} />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="medicalConditions" className={labelClass}>Medical Conditions</label>
-            <textarea id="medicalConditions" rows={4} value={form.medicalConditions} onChange={set('medicalConditions')} placeholder="List any relevant medical conditions…" className={`resize-none py-2.5 ${fieldClass}`} />
+            <label htmlFor="medicalConditions" className={labelClass}>{t('medical_conditions')}</label>
+            <textarea id="medicalConditions" rows={4} value={form.medicalConditions} onChange={set('medicalConditions')} placeholder={t('placeholder_medical')} className={`resize-none py-2.5 ${fieldClass}`} />
           </div>
 
           <div className="flex gap-3 pt-2">
             <Button type="submit" size="lg" disabled={saving}>
-              {saving ? 'Creating Account…' : 'Create Account'}
+              {saving ? t('uploading') : t('create_account')}
             </Button>
-            <Button type="button" variant="secondary" size="lg" onClick={() => router.push('/patient')}>Cancel</Button>
+            <Button type="button" variant="secondary" size="lg" onClick={() => router.push('/patient')}>{t('cancel')}</Button>
           </div>
 
         </form>

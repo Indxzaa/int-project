@@ -12,6 +12,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import db from '@/lib/db'
+import { useI18n } from '@/lib/i18n'
 import { Photo } from '@/lib/types'
 import { RewardOverlay } from '@/components/ui/RewardOverlay'
 
@@ -85,6 +86,7 @@ export default function PictureSequencePage({ params }: { params: Promise<{ id: 
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useI18n()
   const from = searchParams.get('from') ?? 'patient'
   const exitPath =
     from === 'patient' || from === 'role'
@@ -137,11 +139,11 @@ export default function PictureSequencePage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-white px-6 pb-16 pt-10">
-      <button onClick={() => router.push(exitPath)} aria-label="Back"
-        className="absolute left-6 top-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-3xl text-slate-700 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400">←</button>
+      <button onClick={() => router.push(exitPath)} aria-label={t('back')}
+        className="absolute left-4 top-5 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-700 hover:bg-slate-200 active:scale-95 transition-all duration-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400">←</button>
 
-      <h1 className="mb-2 text-4xl font-bold text-slate-900">Picture Sequence</h1>
-      <p className="mb-10 text-xl text-slate-500">{round.seq.name} — Drag to arrange in the correct order.</p>
+      <h1 className="mb-2 text-4xl font-bold text-slate-900">{t('picture_sequence')}</h1>
+      <p className="mb-10 text-xl text-slate-500">{round.seq.name} — {t('drag_arrange_order')}</p>
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={round.items.map(i => i.id)} strategy={verticalListSortingStrategy}>
@@ -154,13 +156,13 @@ export default function PictureSequencePage({ params }: { params: Promise<{ id: 
       </DndContext>
 
       {feedback === 'incorrect' && (
-        <p className="mt-10 text-2xl font-semibold text-amber-600">Try Again</p>
+        <p className="mt-10 text-2xl font-semibold text-amber-600">{t('try_again')}</p>
       )}
 
       {(feedback === null || feedback === 'incorrect') && (
         <button onClick={handleCheck}
           className="mt-10 rounded-2xl bg-blue-600 px-14 py-5 text-3xl font-bold text-white shadow-md hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 active:scale-95 transition-transform">
-          Check ✓
+          {t('check')}
         </button>
       )}
     </div>

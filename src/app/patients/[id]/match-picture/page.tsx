@@ -4,6 +4,7 @@ import { use, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useLiveQuery } from 'dexie-react-hooks'
 import db from '@/lib/db'
+import { useI18n } from '@/lib/i18n'
 import { Photo } from '@/lib/types'
 import { BlobImg } from '@/components/session/BlobImg'
 
@@ -32,6 +33,7 @@ export default function MatchPicturePage({ params }: { params: Promise<{ id: str
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useI18n()
   const from = searchParams.get('from') ?? 'patient'
   const exitPath =
     from === 'patient' || from === 'role'
@@ -87,29 +89,27 @@ export default function MatchPicturePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-white px-6 pb-16 pt-10">
-      <button onClick={() => router.push(exitPath)} aria-label="Back"
-        className="absolute left-6 top-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-3xl text-slate-700 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400">
-        ←
-      </button>
+      <button onClick={() => router.push(exitPath)} aria-label={t('back')}
+        className="absolute left-4 top-5 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-700 hover:bg-slate-200 active:scale-95 transition-all duration-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400">←</button>
 
-      <h1 className="mb-10 text-4xl font-bold text-slate-900">Match the Right Picture</h1>
+      <h1 className="mb-10 text-4xl font-bold text-slate-900">{t('match_right_picture')}</h1>
 
-      {photos === undefined && <p className="text-xl text-slate-400">Loading…</p>}
+      {photos === undefined && <p className="text-xl text-slate-400">…</p>}
 
       {photos !== undefined && photos.length === 0 && (
-        <p className="text-xl text-slate-500">Please upload family photos first.</p>
+        <p className="text-xl text-slate-500">{t('no_photos_upload')}</p>
       )}
 
       {target && phase === 'viewing' && (
         <div className="flex flex-col items-center gap-6">
-          <p className="text-2xl font-semibold text-slate-600">Remember this photo.</p>
+          <p className="text-2xl font-semibold text-slate-600">{t('remember_photo')}</p>
           <div className="h-64 w-64 overflow-hidden rounded-2xl border-4 border-slate-200 shadow-lg">
             <BlobImg blob={target.blob} filename={target.filename} className="h-full w-full object-cover" />
           </div>
           {config?.viewTime === null && (
             <button onClick={handleContinue}
               className="mt-4 rounded-2xl bg-blue-600 px-12 py-5 text-2xl font-bold text-white shadow-md hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 active:scale-95 transition-transform">
-              Continue →
+              {t('continue')}
             </button>
           )}
         </div>
@@ -118,13 +118,13 @@ export default function MatchPicturePage({ params }: { params: Promise<{ id: str
       {phase === 'answering' && choices.length > 0 && result === 'correct' && target && (
         <div className="flex flex-col items-center gap-6">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-5xl text-green-600">✓</div>
-          <p className="text-3xl font-bold text-green-600">Great Job!</p>
+          <p className="text-3xl font-bold text-green-600">{t('great_job')}</p>
           <div className="h-56 w-56 overflow-hidden rounded-2xl border-4 border-green-300 shadow-lg">
             <BlobImg blob={target.blob} filename={target.filename} className="h-full w-full object-cover" />
           </div>
           <button onClick={handleNext}
             className="rounded-2xl bg-green-600 px-12 py-5 text-2xl font-bold text-white shadow-md hover:bg-green-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-green-400 active:scale-95 transition-transform">
-            Next →
+            {t('next')} →
           </button>
         </div>
       )}
@@ -132,9 +132,9 @@ export default function MatchPicturePage({ params }: { params: Promise<{ id: str
       {phase === 'answering' && choices.length > 0 && result !== 'correct' && (
         <div className="flex w-full max-w-md flex-col items-center gap-4">
           {result === 'wrong' && (
-            <p className="text-xl font-semibold text-amber-500">Try Again</p>
+            <p className="text-xl font-semibold text-amber-500">{t('try_again')}</p>
           )}
-          <p className="text-2xl font-semibold text-slate-600">Which photo was it?</p>
+          <p className="text-2xl font-semibold text-slate-600">{t('which_photo')}</p>
           <div className="grid w-full grid-cols-2 gap-4">
             {choices.map(photo => (
               <button key={photo.id} onClick={() => handleChoiceSelect(photo)}

@@ -4,6 +4,7 @@ import { use, useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useLiveQuery } from 'dexie-react-hooks'
 import db from '@/lib/db'
+import { useI18n } from '@/lib/i18n'
 import { Photo } from '@/lib/types'
 import { BlobImg } from '@/components/session/BlobImg'
 
@@ -32,6 +33,7 @@ export default function MemoryFlipPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useI18n()
   const from = searchParams.get('from') ?? 'patient'
   const exitPath =
     from === 'patient' || from === 'role'
@@ -87,27 +89,27 @@ export default function MemoryFlipPage({ params }: { params: Promise<{ id: strin
     <div className="flex min-h-screen flex-col items-center bg-white px-6 pb-16 pt-10">
       <button
         onClick={() => router.push(exitPath)}
-        aria-label="Back"
-        className="absolute left-6 top-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-3xl text-slate-700 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400"
+        aria-label={t('back')}
+        className="absolute left-4 top-5 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-700 hover:bg-slate-200 active:scale-95 transition-all duration-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400"
       >
         ←
       </button>
 
-      <h1 className="mb-10 text-4xl font-bold text-slate-900">Memory Flip Match</h1>
+      <h1 className="mb-10 text-4xl font-bold text-slate-900">{t('memory_flip')}</h1>
 
       {photos !== undefined && photos.length < 2 && (
-        <p className="text-xl text-slate-500">Please upload at least 2 photos to play.</p>
+        <p className="text-xl text-slate-500">{t('min_2_photos')}</p>
       )}
 
       {allMatched && (
         <div className="flex flex-col items-center gap-6">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-5xl text-green-600">✓</div>
-          <p className="text-3xl font-bold text-green-600">Great Job!</p>
+          <p className="text-3xl font-bold text-green-600">{t('great_job')}</p>
           <button
             onClick={handleNext}
             className="rounded-2xl bg-green-600 px-12 py-5 text-2xl font-bold text-white shadow-md hover:bg-green-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-green-400 active:scale-95 transition-transform"
           >
-            Next →
+            {t('next')} →
           </button>
         </div>
       )}

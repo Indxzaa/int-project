@@ -2,7 +2,7 @@ const translations = {
   en: {
     // Home
     'app_title': 'Memory Care',
-    'select_role': 'Select your role to continue.',
+    'select_role': 'Select role to continue.',
     'role_caregiver': 'Caregiver / Doctor',
     'role_patient': 'Patient',
 
@@ -236,7 +236,6 @@ const translations = {
     // Patient Profile
     'patient_profile': 'โปรไฟล์ผู้ป่วย',
     'start_patient_mode': '▶ เริ่มทำการฝึก',
-    'Home':'🏠 หน้าเเรก',
     'history': '📊 ประวัติ',
     'profile_picture': 'รูปโปรไฟล์',
     'upload_photo': '📷 อัพโหลดรูป',
